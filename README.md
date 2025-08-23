@@ -82,22 +82,6 @@ This MIPS CPU implements a single-cycle datapath supporting the following instru
 | I | BEQ | 000100 | - | Branch if equal |
 | J | J | 000010 | - | Jump |
 
-### Test Program
-
-The instruction memory is pre-loaded with a test program:
-
-```assembly
-# Address  # Instruction      # Description
-0x0000:    addi $1, $0, 10    # Load 10 into $1
-0x0004:    addi $2, $0, 20    # Load 20 into $2
-0x0008:    add  $3, $1, $2    # $3 = $1 + $2 = 30
-0x000C:    sub  $4, $3, $1    # $4 = $3 - $1 = 20
-0x0010:    and  $5, $3, $2    # $5 = $3 & $2 = 20
-0x0014:    or   $6, $4, $5    # $6 = $4 | $5 = 20
-0x0018:    slt  $7, $1, $2    # $7 = ($1 < $2) = 1
-0x001C:    beq  $1, $2, -1    # Branch if $1 == $2 (not taken)
-0x0020:    j    0             # Jump to address 0
-```
 
 ## File Structure
 
@@ -122,6 +106,7 @@ mips_cpu/
 │   ├── control_tb.v      # Control Unit Testbench
 │   └── mips_cpu_tb.v     # Complete CPU Testbench
 ├── Makefile              # Build system
+└── shell.nix             # this is a nix shell for the packages you need
 └── README.md             # This file
 ```
 
@@ -157,51 +142,4 @@ Clean build files:
 make clean
 ```
 
-### Expected Results
 
-When running the complete CPU test, you should see:
-- PC incrementing from 0x00000000 to 0x00000020
-- Register writes showing correct computation results
-- Final register state:
-  - $1 = 10, $2 = 20, $3 = 30, $4 = 20, $5 = 20, $6 = 20, $7 = 1
-
-## Design Decisions
-
-1. **Single-Cycle Implementation**: Simple design where each instruction completes in one clock cycle
-2. **Harvard Architecture**: Separate instruction and data memories
-3. **Word Addressing**: All memory accesses are 32-bit aligned
-4. **Synchronous Reset**: All sequential elements reset on clock edge
-5. **Combinational Reads**: Register file and data memory provide immediate read access
-
-## Limitations
-
-1. **No Pipeline**: Single-cycle design limits performance
-2. **Limited ISA**: Only basic MIPS instructions supported
-3. **No Exceptions**: No exception or interrupt handling
-4. **Fixed Memory Size**: 4KB instruction and data memories
-5. **No Cache**: Direct memory access only
-
-## Extensions
-
-This basic CPU can be extended with:
-- Pipeline stages for better performance
-- Floating-point unit (FPU)
-- Memory management unit (MMU)
-- Cache hierarchy
-- Exception handling
-- More comprehensive instruction set
-- Hazard detection and forwarding
-
-## Verification
-
-Each module includes comprehensive testbenches that verify:
-- Functional correctness
-- Edge cases and error conditions
-- Interface compliance
-- Performance characteristics
-
-The complete CPU testbench runs the pre-loaded program and verifies all register contents match expected values.
-
-## License
-
-This project is provided as educational material for learning computer architecture and Verilog HDL.
