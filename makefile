@@ -4,45 +4,52 @@
 SIM = iverilog
 VVP = vvp
 
+# Folders
+SRC_DIR = src
+TB_DIR  = tb
+
 # Source files
-SOURCES = pc.v imem.v regfile.v alu.v control.v alu_control.v \
-          sign_extend.v dmem.v mux.v mips_cpu.v
+SOURCES = $(SRC_DIR)/pc.v $(SRC_DIR)/imem.v $(SRC_DIR)/regfile.v \
+          $(SRC_DIR)/alu.v $(SRC_DIR)/control.v $(SRC_DIR)/alu_control.v \
+          $(SRC_DIR)/sign_extend.v $(SRC_DIR)/dmem.v $(SRC_DIR)/mux.v \
+          $(SRC_DIR)/mips_cpu.v
 
 # Testbench files
-TESTBENCHES = pc_tb.v imem_tb.v regfile_tb.v alu_tb.v control_tb.v mips_cpu_tb.v
+TESTBENCHES = $(TB_DIR)/pc_tb.v $(TB_DIR)/imem_tb.v $(TB_DIR)/regfile_tb.v \
+              $(TB_DIR)/alu_tb.v $(TB_DIR)/control_tb.v $(TB_DIR)/mips_cpu_tb.v
 
 # Default target
 all: test_all
 
 # Individual module tests
-test_pc: pc.v pc_tb.v
-	$(SIM) -o pc_test pc.v pc_tb.v
+test_pc: $(SRC_DIR)/pc.v $(TB_DIR)/pc_tb.v
+	$(SIM) -o pc_test $^
 	$(VVP) pc_test
 	rm -f pc_test
 
-test_imem: imem.v imem_tb.v
-	$(SIM) -o imem_test imem.v imem_tb.v
+test_imem: $(SRC_DIR)/imem.v $(TB_DIR)/imem_tb.v
+	$(SIM) -o imem_test $^
 	$(VVP) imem_test
 	rm -f imem_test
 
-test_regfile: regfile.v regfile_tb.v
-	$(SIM) -o regfile_test regfile.v regfile_tb.v
+test_regfile: $(SRC_DIR)/regfile.v $(TB_DIR)/regfile_tb.v
+	$(SIM) -o regfile_test $^
 	$(VVP) regfile_test
 	rm -f regfile_test
 
-test_alu: alu.v alu_tb.v
-	$(SIM) -o alu_test alu.v alu_tb.v
+test_alu: $(SRC_DIR)/alu.v $(TB_DIR)/alu_tb.v
+	$(SIM) -o alu_test $^
 	$(VVP) alu_test
 	rm -f alu_test
 
-test_control: control.v control_tb.v
-	$(SIM) -o control_test control.v control_tb.v
+test_control: $(SRC_DIR)/control.v $(TB_DIR)/control_tb.v
+	$(SIM) -o control_test $^
 	$(VVP) control_test
 	rm -f control_test
 
 # Full CPU test
-test_cpu: $(SOURCES) mips_cpu_tb.v
-	$(SIM) -o cpu_test $(SOURCES) mips_cpu_tb.v
+test_cpu: $(SOURCES) $(TB_DIR)/mips_cpu_tb.v
+	$(SIM) -o cpu_test $^
 	$(VVP) cpu_test
 	rm -f cpu_test
 
